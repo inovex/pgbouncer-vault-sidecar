@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-application
+spec:
+  serviceAccountName: test-application
+  restartPolicy: OnFailure
+  containers:
+  - name: main-application
+    image: "postgres"
+    command:
+    - psql
+    - --host=localhost
+    - --port=6432
+    - --dbname=postgres
+    - --command=SELECT * FROM pg_tables;
+  - name: pgbouncer-vault-sidecar
+    image: "pgbouncer-vault"
+    imagePullPolicy: Never
+    env:
+    - name: VAULT_ADDR
+      value: http://vault:8200
+    - name: VAULT_PATH
+      value: database/creds/my-role
+    - name: VAULT_KUBERNETES_ROLE
+      value: database-access
+    - name: DB_NAME
+      value: postgres
+    - name: DB_HOST
+      value: postgres
+    - name: TLS_MODE
+      value: disable

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -ex
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd $DIR
+
+eval $(minikube -p minikube docker-env)
+docker build -t pgbouncer-vault ../build
+
+kubectl delete po vault || true
+kubectl delete po postgres || true
+kubectl delete po test-application || true
+
+kubectl apply -f manifests/vault.yaml
+kubectl apply -f manifests/app-sa.yaml
+kubectl apply -f manifests/postgres.yaml
+
+kubectl wait --for=condition=Ready pod/vault
+kubectl wait --for=condition=Ready pod/postgres
+
+kubectl exec vault -- vault auth enable kubernetes
+
+kubectl exec vault -- vault write auth/kubernetes/config \
+                            kubernetes_host=https://kubernetes \
+                            kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+                            token_reviewer_jwt=@/var/run/secrets/kubernetes.io/serviceaccount/token
+
+kubectl exec vault -- vault write auth/kubernetes/role/database-access \
+                            bound_service_account_names=test-application \
+                            bound_service_account_namespaces=default \
+                            policies=test-database \
+                            ttl=1h
+
+cat policy.hcl | kubectl exec vault -i -- vault policy write test-database - 
+
+kubectl exec vault -- vault secrets enable database
+
+kubectl exec vault -- vault write database/config/my-database \
+    plugin_name=postgresql-database-plugin \
+    allowed_roles="my-role" \
+    connection_url="postgresql://postgres:supersecret@postgres:5432/?sslmode=disable"
+
+kubectl exec vault -- vault write database/roles/my-role \
+    db_name=my-database \
+    creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
+        GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";" \
+    default_ttl="1h" \
+    max_ttl="24h"
+
+kubectl apply -f manifests/app.yaml

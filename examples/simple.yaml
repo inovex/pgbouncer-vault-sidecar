@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-test
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: main-application
+    image: "postgres"
+    command:
+    - psql
+    - --host=localhost
+    - --port=6432
+    - --dbname=testdb
+    - --command=SELECT * FROM pg_tables;
