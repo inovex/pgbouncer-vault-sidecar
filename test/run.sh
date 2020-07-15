@@ -8,9 +8,9 @@ cd $DIR
 eval $(minikube -p minikube docker-env)
 docker build -t pgbouncer-vault ../build
 
-kubectl delete po vault || true
-kubectl delete po postgres || true
-kubectl delete po test-application || true
+kubectl delete po --grace-period=1 vault || true
+kubectl delete po --grace-period=1 postgres || true
+kubectl delete po --grace-period=1 test-application || true
 
 kubectl apply -f manifests/vault.yaml
 kubectl apply -f manifests/app-sa.yaml
