@@ -9,3 +9,5 @@ do
 done
 
 echo "Test container completed"
+
+ kubectl logs test-application -c main-application
