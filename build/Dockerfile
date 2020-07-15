@@ -7,7 +7,7 @@ USER root
 # Install pgbouncer
 # TODO pin version
 RUN apk update && \
-    apk add 'pgbouncer' 'jq' 'postgresql-client' --no-cache
+    apk add 'pgbouncer' 'jq' 'postgresql-client' 'tini' --no-cache
 
 RUN mkdir /var/secrets/ -p
 RUN cd /bin/ && \
@@ -27,4 +27,4 @@ RUN chmod +x /entrypoint.sh && \
 # Switch to consul-template user from base image
 USER consul-template
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "-g", "--", "/entrypoint.sh"]
