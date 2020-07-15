@@ -1,8 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: sidecar-test
+  name: test-application
 spec:
+  serviceAccountName: test-application
   restartPolicy: OnFailure
   containers:
   - name: main-application
@@ -10,6 +11,26 @@ spec:
     command:
     - psql
     - --host=localhost
-    - --port=6432
-    - --dbname=testdb
+    - --dbname=postgres
     - --command=SELECT * FROM pg_tables;
+  - name: pgbouncer-vault-sidecar
+    image: "pgbouncer-vault"
+    imagePullPolicy: Never
+    livenessProbe:
+      exec:
+        command: ["psql", "-U", "postgres", "-d", "$(DB_HOST)", "-c", "SELECT 1"]
+    env:
+    - name: VAULT_ADDR
+      value: http://vault:8200
+    # demonstrate env variable substition for sidecar injection
+    # not really needed here
+    - name: ROLE
+      value: my-role
+    - name: VAULT_PATH
+      value: database/creds/$(ROLE)
+    - name: VAULT_KUBERNETES_ROLE
+      value: database-access
+    - name: DB_NAME
+      value: my-db
+    - name: DB_HOST
+      value: postgres
