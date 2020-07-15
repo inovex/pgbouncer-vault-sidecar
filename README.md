@@ -20,13 +20,11 @@ The sidecar is configured via environment variables:
 - **DB_PORT**: The port of the Postgres server. Default is `5432`.
 - **DB_NAME**: *Required* The name of the database. 
 - **SSL_MODE**: The mode that is used to connect to Postgres. See [the Postgres docs](https://www.postgresql.org/docs/current/libpq-connect.html) for possible values. Default is `require`.
-- **VAULT_PATH**: *Required* The path of the database credentials in Vault. Can be templated.
+- **VAULT_PATH**: *Required* The path of the database credentials in Vault.
 - **VAULT_ADDR**: *Required* The address of Vault. The protocol (http(s)) portion of the address is required.
 - **VAULT_CA_CERT**: Path to a CA certificate to connect to Vault.
 - **VAULT_KUBERNETES_ROLE**: Which [role](https://www.vaultproject.io/docs/auth/kubernetes#via-the-api) to request during token retrieval. Default is `default`.
 - **LISTEN_PORT**: Which port to listen on for incoming database connections.
-
-Templating can be used to configure the sidecar centrally from an [](). Templating syntax.
 
 The sidecar authenticates against Vault with the [Kubernetes auth method](https://www.vaultproject.io/docs/auth/kubernetes). The service account that is associated with the pod must have access to the database credentials.
 
@@ -48,7 +46,7 @@ To get metrics for pgbouncer add the [prometheus-pgbouncer-exporter](https://git
 
 ## Sidecar injection
 
-The sidecar doesn't come with an injector but you can use any generic injector, for example [tumblr/k8s-sidecar-injector](https://github.com/tumblr/k8s-sidecar-injector). You can find an example [here](examples/sidecar-injection).
+The sidecar doesn't come with an injector but you can use any generic injector, for example [tumblr/k8s-sidecar-injector](https://github.com/tumblr/k8s-sidecar-injector). You can use [environment variable substitution in environment variables](https://stackoverflow.com/a/49583616/1863595) to generalize the configuration. See example [here](examples/sidecar-injection). 
 
 ## Limitations
 

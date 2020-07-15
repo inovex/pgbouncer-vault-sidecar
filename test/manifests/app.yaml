@@ -11,17 +11,23 @@ spec:
     command:
     - psql
     - --host=localhost
-    - --port=6432
     - --dbname=postgres
     - --command=SELECT * FROM pg_tables;
   - name: pgbouncer-vault-sidecar
     image: "pgbouncer-vault"
     imagePullPolicy: Never
+    livenessProbe:
+      exec:
+        command: ["psql", "-U", "postgres", "-d", "$(DB_HOST)", "-c", "SELECT 1"]
     env:
     - name: VAULT_ADDR
       value: http://vault:8200
+    # demonstrate env variable substition for sidecar injection
+    # not really needed here
+    - name: ROLE
+      value: my-role
     - name: VAULT_PATH
-      value: database/creds/my-role
+      value: database/creds/$(ROLE)
     - name: VAULT_KUBERNETES_ROLE
       value: database-access
     - name: DB_NAME
