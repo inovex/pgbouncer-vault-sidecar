@@ -50,9 +50,9 @@ The sidecar doesn't come with an injector but you can use any generic injector, 
 
 ## Limitations
 
-Consul template renews the Vault token that it initially obtained by Vault. If `maxTTL` is configured on that token or Vault is unavailable for a longer time, then consul template will not attempt to obtain a new token. Use a liveness probe to reduce the risk.
-
-There is currently no good way to [run a sidecar in jobs](https://github.com/kubernetes/kubernetes/issues/25908).
+- Consul template renews the Vault token that it initially obtained by Vault. If `maxTTL` is configured on that token or Vault is unavailable for a longer time, then consul template will not attempt to obtain a new token. Use a liveness probe to reduce the risk.
+- There is currently no good way to [run a sidecar in jobs](https://github.com/kubernetes/kubernetes/issues/25908).
+- The sidecar supports a single database. If you need multiple databases, run multiple sidecars and ensure that the ports are and colliding.
 
 ## Build instructions
 
