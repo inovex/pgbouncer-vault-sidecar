@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-test
+  annotations:
+    injector.tumblr.com/request: pgbouncer-vault-sidecar
+    db-sidecar-injector/db-host: postgres
+    db-sidecar-injector/database: testdb
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: main-application
+    image: "postgres"
+    command:
+    - psql
+    - --host=localhost
+    - --dbname=testdb
+    - --command=SELECT * FROM pg_tables;

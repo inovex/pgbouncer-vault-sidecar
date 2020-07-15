@@ -1,0 +1,20 @@
+name: pgbouncer-vault-sidecar:latest
+containers:
+- name: pgbouncer-vault-sidecar
+  image: inovex/pgbouncer-vault-sidecar:latest
+  env:
+    # populate environment variables from annotations
+    - name: DB_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['db-sidecar-injector/database']
+    - name: DB_HOST
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['db-sidecar-injector/db-host']
+    # template VAULT_PATH based on database
+    - name: VAULT_PATH
+      value: database/creds/$(DB_HOST)_$(DB_NAME)
+    # configure Vault centrally for all sidecars
+    - name: VAULT_ADDR
+      value: http://vault:8200
