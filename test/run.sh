@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$1" != "run" ]; then
+    echo "This script requires a configured Minikube cluster and will remove pods. Pass 'run' as an argument to continue."
+    exit 30
+fi
+
 set -ex
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
