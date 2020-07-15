@@ -7,7 +7,7 @@ USER root
 # Install pgbouncer
 # TODO pin version
 RUN apk update && \
-    apk add 'pgbouncer' 'jq' --no-cache
+    apk add 'pgbouncer' 'jq' 'postgresql-client' --no-cache
 
 RUN mkdir /var/secrets/ -p
 RUN cd /bin/ && \
