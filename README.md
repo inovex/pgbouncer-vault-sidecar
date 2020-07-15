@@ -26,33 +26,48 @@ The sidecar is configured via environment variables:
 - **VAULT_KUBERNETES_ROLE**: Which [role](https://www.vaultproject.io/docs/auth/kubernetes#via-the-api) to request during token retrieval. Default is `default`.
 - **LISTEN_PORT**: Which port to listen on for incoming database connections.
 
+Templating can be used to configure the sidecar centrally from an [](). Templating syntax.
+
 The sidecar authenticates against Vault with the [Kubernetes auth method](https://www.vaultproject.io/docs/auth/kubernetes). The service account that is associated with the pod must have access to the database credentials.
 
 use service account projections
 
-The main application can connect to the database using `localhost`, the configured database name (`$DB_NAME`) and the configured port (`$LISTEN_PORT`).
+The main application can connect to the database using `localhost`, the configured database name (`$DB_NAME`) and the configured port (`$LISTEN_PORT`). Any username and password will do.
 
-liveness probes
+The sidecar comes with `psql` to define a liveness probe.
+
+```yaml
+    livenessProbe:
+      exec:
+        command: ["psql", "-d", "my-database", "-c", "SELECT 1"]
+```
 
 ## Metrics
 
-
+To get metrics for pgbouncer add the [prometheus-pgbouncer-exporter](https://github.com/spreaker/prometheus-pgbouncer-exporter) as an extra sidecar.
 
 ## Sidecar injection
 
+The sidecar doesn't come with an injector but you can use any generic injector, for example [tumblr/k8s-sidecar-injector](https://github.com/tumblr/k8s-sidecar-injector). You can find an example [here](examples/sidecar-injection).
+
 ## Limitations
 
-Consul template renews the Vault token that is initially obtained by Vault. If `maxTTL` is configured on that token or Vault is unavailable for a longer time, then consul template will not attempt to obtain a new token.
+Consul template renews the Vault token that it initially obtained by Vault. If `maxTTL` is configured on that token or Vault is unavailable for a longer time, then consul template will not attempt to obtain a new token. Use a liveness probe to reduce the risk.
 
 There is currently no good way to [run a sidecar in jobs](https://github.com/kubernetes/kubernetes/issues/25908).
 
 ## Build instructions
 
-`docker build -t pgbouncer-vault build`
+`docker build -t inovex/pgbouncer-vault build`
 
 ## Contribution
 
+Contributions are highly appreciated :)
 
 ## Acknowledgement
 
+
+
 ## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.
