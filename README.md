@@ -13,7 +13,7 @@ This sidecar provides a proxy ([pgbouncer](https://www.pgbouncer.org/)) to a Pos
 
 ## Usage
 
-Releases are available on [Docker Hub](). Check the [examples](examples/) folder.
+Releases are available on [Docker Hub](https://hub.docker.com/repository/docker/inovex/pgbouncer-vault-sidecar). Check the [examples](examples/) folder.
 
 The sidecar is configured via environment variables:
 
