@@ -63,7 +63,7 @@ Contributions are highly appreciated :)
 
 ## Acknowledgement
 
-This project is developed in cooperation with the BMW.
+This project is developed in cooperation with the BMW Group.
 
 ## License
 
