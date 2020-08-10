@@ -1,10 +1,11 @@
 # Pgbouncer Vault Sidecar
 
-This sidecar provides a proxy ([pgbouncer]()) to a Postgres database and takes care of authentication by obtaining credentials from [Vault](). The main container connects to `localhost`, the sidecar takes care of the rest!
+This sidecar provides a proxy ([pgbouncer](https://www.pgbouncer.org/)) to a Postgres database and takes care of authentication by obtaining credentials from [Vault](https://www.vaultproject.io/). The main container connects to `localhost`, the sidecar takes care of the rest!
 
-Why?
+**Why?** Vault is great for managing credentials, especially with automatically rotating database credentials. However, it puts a burden on the application to deal with Vault and updating the credentials of the database connections. This sidecar hides all of that complexity.
 
-Features
+### Features
+
 - Vault integration without changing the application
 - Database connection pooling
 - Auto renewal of database credentials
@@ -28,8 +29,6 @@ The sidecar is configured via environment variables:
 
 The sidecar authenticates against Vault with the [Kubernetes auth method](https://www.vaultproject.io/docs/auth/kubernetes). The service account that is associated with the pod must have access to the database credentials.
 
-use service account projections
-
 The main application can connect to the database using `localhost`, the configured database name (`$DB_NAME`) and the configured port (`$LISTEN_PORT`). Any username and password will do.
 
 The sidecar comes with `psql` to define a liveness probe.
@@ -50,9 +49,9 @@ The sidecar doesn't come with an injector but you can use any generic injector, 
 
 ## Limitations
 
-- Consul template renews the Vault token that it initially obtained by Vault. If `maxTTL` is configured on that token or Vault is unavailable for a longer time, then consul template will not attempt to obtain a new token. Use a liveness probe to reduce the risk.
+- Consul template renews the Vault token that it initially obtained by Vault. If `maxTTL` is configured on that token or Vault is unavailable for a longer period, then consul template will not attempt to obtain a new token. Use a liveness probe to reduce the risk.
 - There is currently no good way to [run a sidecar in jobs](https://github.com/kubernetes/kubernetes/issues/25908).
-- The sidecar supports a single database. If you need multiple databases, run multiple sidecars and ensure that the ports are and colliding.
+- The sidecar supports a single database. If you need multiple databases, run multiple sidecars and ensure that the ports are not colliding.
 
 ## Build instructions
 
@@ -64,7 +63,7 @@ Contributions are highly appreciated :)
 
 ## Acknowledgement
 
-
+This project is developed in cooperation with the BMW.
 
 ## License
 
