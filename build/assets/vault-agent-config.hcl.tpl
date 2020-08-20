@@ -3,7 +3,10 @@ auto_auth {
     method "kubernetes" {
         mount_path = "auth/kubernetes"
         config = {
-            role = "__ROLE__"
+            role = "{{ env "VAULT_KUBERNETES_ROLE" }}"
+            {{ if (env "VAULT_KUBERNETES_TOKEN_PATH") }}
+            token_path = "{{ env "VAULT_KUBERNETES_TOKEN_PATH" }}"
+            {{ end }}
         }
     }
 

@@ -2,8 +2,11 @@ reload_signal = "SIGHUP"
 kill_signal = "SIGTERM"
 
 vault {
+
   # This value can also be specified via the environment variable VAULT_NAMESPACE.
-  namespace = ""
+  namespace = "{{ env "VAULT_NAMESPACE" }}"
+
+  address = "{{ env "VAULT_ADDR" }}"
 
   # This token is set by the Vault agent in the entrypoint.sh
   vault_agent_token_file = "/tmp/auth.token"
@@ -25,11 +28,16 @@ vault {
   # applies to the top-level Vault token itself.
   renew_token = true
 
-  # TODO allow custom CA
+  {{ if (or (env "VAULT_CA_CERT") (env "VAULT_SSL_VERIFY")) -}}
   ssl {
-    verify = true
-    ca_cert = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+    {{ if (env "VAULT_CA_CERT") -}}
+    ca_cert = {{ env "VAULT_CA_CERT" }}
+    {{- end }}
+    {{ if (env "VAULT_SSL_VERIFY") -}}
+    ssl_verify = {{ env "VAULT_SSL_VERIFY" }}
+    {{- end }}
   }
+  {{- end }}
 }
 
 exec {

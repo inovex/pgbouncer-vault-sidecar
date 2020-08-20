@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$1" != "run" ]; then
-    echo "This script requires a configured Minikube cluster and will remove pods. Pass 'run' as an argument to continue."
+    echo "This script requires a configured kind cluster and will remove pods. Pass 'run' as an argument to continue."
     exit 30
 fi
 
@@ -10,8 +10,10 @@ set -ex
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
-eval $(minikube -p minikube docker-env)
+kubectl -n kube-system wait --timeout=2m --for=condition=Available deployment/coredns
+
 docker build -t pgbouncer-vault ../build
+docker save pgbouncer-vault | (eval "$(minikube docker-env)" && docker load)
 
 kubectl delete po --grace-period=1 vault || true
 kubectl delete po --grace-period=1 postgres || true
