@@ -3,6 +3,7 @@ kind: Pod
 metadata:
   name: test-application
 spec:
+  automountServiceAccountToken: false
   serviceAccountName: test-application
   restartPolicy: OnFailure
   containers:
@@ -30,9 +31,23 @@ spec:
       value: database/creds/$(ROLE)
     - name: VAULT_KUBERNETES_ROLE
       value: database-access
+    - name: VAULT_KUBERNETES_TOKEN_PATH
+      value: /var/run/secrets/tokens/test-application
     - name: DB_NAME
       value: postgres
     - name: DB_HOST
       value: postgres
     - name: TLS_MODE
       value: disable
+    volumeMounts:
+    - mountPath: /var/run/secrets/tokens
+      name: vault-token
+  volumes:
+  - name: vault-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          path: test-application
+          expirationSeconds: 7200
+          audience: api
+

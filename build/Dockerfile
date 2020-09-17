@@ -18,8 +18,8 @@ RUN cd /bin/ && \
 # Copy pgbouncer config and credentials into container
 COPY assets/pgbouncer_template.ini /etc/pgbouncer/pgbouncer_template.ini
 RUN ls -l /etc/pgbouncer
-COPY assets/consul-template-config.hcl /etc/consul-template-config.hcl
-COPY assets/vault-agent-config.hcl /etc/vault-agent-config.hcl
+COPY assets/consul-template-config.hcl.tpl /etc/consul-template-config.hcl.tpl
+COPY assets/vault-agent-config.hcl.tpl /etc/vault-agent-config.hcl.tpl
 COPY assets/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh && \
     chown consul-template /var/log/pgbouncer -R

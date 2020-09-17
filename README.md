@@ -24,7 +24,12 @@ The sidecar is configured via environment variables:
 - **VAULT_PATH**: *Required* The path of the database credentials in Vault.
 - **VAULT_ADDR**: *Required* The address of Vault. The protocol (http(s)) portion of the address is required.
 - **VAULT_CA_CERT**: Path to a CA certificate to connect to Vault.
+- **VAULT_SSL_VERIFY**: Boolean (`"true"` or `"false"`) indicating whether to
+  verify ssl connections.
 - **VAULT_KUBERNETES_ROLE**: Which [role](https://www.vaultproject.io/docs/auth/kubernetes#via-the-api) to request during token retrieval. Default is `default`.
+- **VAULT_KUBERNETES_TOKEN_PATH**:  The path to a custom JWT token used for authentication.
+  See [vault agent configuration](https://www.vaultproject.io/docs/agent/autoauth/methods/kubernetes#token_path)
+  for further information.
 - **LISTEN_PORT**: Which port to listen on for incoming database connections.
 
 The sidecar authenticates against Vault with the [Kubernetes auth method](https://www.vaultproject.io/docs/auth/kubernetes). The service account that is associated with the pod must have access to the database credentials.
@@ -52,6 +57,13 @@ The sidecar doesn't come with an injector but you can use any generic injector, 
 - Consul template renews the Vault token that it initially obtained by Vault. If `maxTTL` is configured on that token or Vault is unavailable for a longer period, then consul template will not attempt to obtain a new token. Use a liveness probe to reduce the risk.
 - There is currently no good way to [run a sidecar in jobs](https://github.com/kubernetes/kubernetes/issues/25908).
 - The sidecar supports a single database. If you need multiple databases, run multiple sidecars and ensure that the ports are not colliding.
+- For service account projections, Kubernetes >= 1.19 is required. There is a
+  bug in earlier versions that causes the tokens in the service account
+  projection to be only readable by `root` although the `projection.defaultMode`
+  specified `0777` as mode (world readable). Mode `0777` is required since the
+  pgbouncer sidecar runs as non-root.
+  See [the issue](https://github.com/kubernetes/kubernetes/issues/89153) and
+  [the fix](https://github.com/kubernetes/kubernetes/commit/3db7275b549559696c42c0b5f51c9a2397e9571d).
 
 ## Build instructions
 
