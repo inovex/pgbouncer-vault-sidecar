@@ -6,8 +6,7 @@ USER root
 
 # Install pgbouncer
 # TODO pin version
-RUN ping -w 4 dl-cdn.alpinelinux.org && \
-    sed -i -e 's/http:/https:/' /etc/apk/repositories && \
+RUN sed -i -e 's/http:/https:/' /etc/apk/repositories && \
     apk update && \
     apk add 'pgbouncer' 'jq' 'postgresql-client' 'tini' --no-cache
 
