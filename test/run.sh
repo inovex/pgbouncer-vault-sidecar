@@ -10,6 +10,7 @@ set -ex
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
+docker build -t pgbouncer-vault ../build
 minikube image build -t pgbouncer-vault ../build
 
 kubectl delete po --grace-period=1 vault || true
