@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   name: vault
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: role-tokenreview-binding
@@ -38,7 +38,7 @@ spec:
   serviceAccountName: vault
   containers:
   - name: vault
-    image: "vault"
+    image: hashicorp/vault:1.13.2
     command:
     - vault 
     - server 
