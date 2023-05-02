@@ -10,8 +10,10 @@ set -ex
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
+# DNS doesn't seem to be ready after minikube set-up is done
+sleep 10
+eval $(minikube -p minikube docker-env)
 docker build -t pgbouncer-vault ../build
-minikube image build -t pgbouncer-vault ../build
 
 kubectl delete po --grace-period=1 vault || true
 kubectl delete po --grace-period=1 postgres || true
