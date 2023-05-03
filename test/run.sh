@@ -42,10 +42,16 @@ cat policy.hcl | kubectl exec vault -i -- vault policy write test-database -
 
 kubectl exec vault -- vault secrets enable database
 
+until kubectl exec vault -- nslookup postgres.default.svc.cluster.local.
+do
+  echo "Wait until Postgres service resolves to pod"
+  sleep 3
+done
+
 kubectl exec vault -- vault write database/config/my-database \
     plugin_name=postgresql-database-plugin \
     allowed_roles="my-role" \
-    connection_url="postgresql://postgres:supersecret@postgres:5432/?sslmode=disable"
+    connection_url="postgresql://postgres:supersecret@postgres.default.svc.cluster.local.:5432/?sslmode=disable"
 
 kubectl exec vault -- vault write database/roles/my-role \
     db_name=my-database \
