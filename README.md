@@ -11,6 +11,8 @@ This sidecar provides a proxy ([pgbouncer](https://www.pgbouncer.org/)) to a Pos
 - Auto renewal of database credentials
 - Authentication with Kubernetes service account
 
+![Diagram](./diagram.svg)
+
 ## Usage
 
 Releases are available on [Docker Hub](https://hub.docker.com/repository/docker/inovex/pgbouncer-vault-sidecar). Check the [examples](examples/) folder.
