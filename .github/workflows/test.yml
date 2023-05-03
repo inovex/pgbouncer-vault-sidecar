@@ -9,6 +9,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Cache Minikube resources
+        uses: actions/cache@v3
+        with:
+          key: minikube
+          path: |
+            ~/.minikube/cache
       - name: Setup Minikube
         uses: manusa/actions-setup-minikube@v2.7.2
         with:
