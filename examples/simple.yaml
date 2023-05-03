@@ -14,7 +14,7 @@ spec:
     - --dbname=postgres
     - --command=SELECT * FROM pg_tables;
   - name: pgbouncer-vault-sidecar
-    image: "pgbouncer-vault"
+    image: ghcr.io/inovex/pgbouncer-vault-sidecar:0.3.0
     imagePullPolicy: Never
     livenessProbe:
       exec:
