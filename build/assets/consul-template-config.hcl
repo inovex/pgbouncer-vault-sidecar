@@ -38,7 +38,7 @@ exec {
   # TODO make splay configurable
   splay = "5s"
 
-  # Triggers pgbouncer to 
+  # Triggers pgbouncer to reload its config (i.e. new credentials)
   reload_signal = "SIGHUP"
 
   # causes a safe shutdown of pgbouncer
@@ -51,6 +51,7 @@ template {
   destination = "/tmp/pgbouncer_rendered.ini"
 
   create_dest_dirs = true
+  error_on_missing_key = true
 
   # This is the optional command to run when the template is rendered. The
   # command will only run if the resulting template changes. The command must
@@ -58,7 +59,6 @@ template {
   # Consul Template is not a replacement for a process monitor or init system.
   # command = "restart service foo"
 
-  # 
   perms = 0600
 
   backup = false
