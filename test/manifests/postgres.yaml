@@ -19,7 +19,7 @@ metadata:
 spec:
   containers:
   - name: postgres
-    image: "postgres"
+    image: postgres:14.7
     env:
     - name: POSTGRES_PASSWORD
       value: supersecret

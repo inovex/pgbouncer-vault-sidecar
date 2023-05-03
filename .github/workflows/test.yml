@@ -1,6 +1,6 @@
 name: Test
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   example:
@@ -15,6 +15,7 @@ jobs:
           minikube version: 'v1.28.0'
           kubernetes version: 'v1.25.4'
           github token: ${{ secrets.GITHUB_TOKEN }}
+          driver: docker
       - name: Setup tests
         run: test/run.sh run
       - name: Check conditions

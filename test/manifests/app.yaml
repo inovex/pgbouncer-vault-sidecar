@@ -21,9 +21,7 @@ spec:
         command: ["psql", "-U", "postgres", "-d", "$(DB_HOST)", "-c", "SELECT 1"]
     env:
     - name: VAULT_ADDR
-      value: http://vault:8200
-    # demonstrate env variable substition for sidecar injection
-    # not really needed here
+      value: http://vault.default.svc.cluster.local.:8200
     - name: ROLE
       value: my-role
     - name: VAULT_PATH
@@ -33,6 +31,6 @@ spec:
     - name: DB_NAME
       value: postgres
     - name: DB_HOST
-      value: postgres
+      value: postgres.default.svc.cluster.local.
     - name: TLS_MODE
       value: disable
