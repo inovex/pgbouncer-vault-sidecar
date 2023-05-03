@@ -6,8 +6,8 @@ until [ "$(kubectl get po test-application -o=jsonpath='{.status.containerStatus
 do
   echo "Waiting for test pod to be completed. Current status is " $(kubectl get po test-application -o=jsonpath='{.status.containerStatuses[0].state}')
   echo "Logs: "
-  kubectl logs -c main-application test-application
-  kubectl logs -c pgbouncer-vault-sidecar test-application
+  kubectl logs --ignore-errors -c main-application test-application
+  kubectl logs --ignore-errors -c pgbouncer-vault-sidecar test-application
   sleep 10s
 done
 
