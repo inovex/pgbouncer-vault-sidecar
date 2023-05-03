@@ -1,5 +1,5 @@
 # Use consul-template upstream image
-FROM hashicorp/consul-template:0.25.2-alpine
+FROM hashicorp/consul-template:0.31
 
 # Switch to root for setup
 USER root
