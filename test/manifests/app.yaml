@@ -22,8 +22,6 @@ spec:
     env:
     - name: VAULT_ADDR
       value: http://vault.default.svc.cluster.local.:8200
-    # demonstrate env variable substition for sidecar injection
-    # not really needed here
     - name: ROLE
       value: my-role
     - name: VAULT_PATH
