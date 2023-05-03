@@ -1,6 +1,10 @@
 # Use consul-template upstream image
 FROM hashicorp/consul-template:0.31.0
 
+LABEL org.opencontainers.image.source=https://github.com/inovex/pgbouncer-vault-sidecar
+LABEL org.opencontainers.image.description="Credential management for your Postgres database connections! "
+LABEL org.opencontainers.image.licenses=AFL-2.0
+
 # Switch to root for setup
 USER root
 
