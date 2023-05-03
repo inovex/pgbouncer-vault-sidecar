@@ -1,7 +1,7 @@
 name: pgbouncer-vault-sidecar:latest
 containers:
 - name: pgbouncer-vault-sidecar
-  image: inovex/pgbouncer-vault-sidecar:latest
+  image: ghcr.io/inovex/pgbouncer-vault-sidecar:0.3.0
   env:
     # populate environment variables from annotations
     - name: DB_NAME

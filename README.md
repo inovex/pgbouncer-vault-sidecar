@@ -15,7 +15,7 @@ This sidecar provides a proxy ([pgbouncer](https://www.pgbouncer.org/)) to a Pos
 
 ## Usage
 
-Releases are available on [Docker Hub](https://hub.docker.com/r/inovex/pgbouncer-vault-sidecar). Check the [examples](examples/) folder.
+Releases are available on [GitHub](https://github.com/inovex/pgbouncer-vault-sidecar/pkgs/container/pgbouncer-vault-sidecar). Check the [examples](examples/) folder.
 
 The sidecar is configured via environment variables:
 
@@ -33,7 +33,7 @@ The sidecar authenticates against Vault with the [Kubernetes auth method](https:
 
 The main application can connect to the database using `localhost`, the configured database name (`$DB_NAME`) and the configured port (`$LISTEN_PORT`). Any username and password will do.
 
-The sidecar comes with `psql` to define a liveness probe.
+The sidecar includes `psql` to define a liveness probe:
 
 ```yaml
     livenessProbe:
