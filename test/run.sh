@@ -10,8 +10,10 @@ set -ex
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $DIR
 
-# DNS doesn't seem to be ready after minikube set-up is done
-sleep 10
+if [ "$GITHUB_ACTIONS" == "true" ]
+    echo Waiting 10 seconds to make sure Minikube DNS is ready
+    sleep 10
+fi
 eval $(minikube -p minikube docker-env)
 docker build -t pgbouncer-vault ../build
 
