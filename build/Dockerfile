@@ -1,5 +1,5 @@
 # Use consul-template upstream image
-FROM hashicorp/consul-template:0.31.0
+FROM hashicorp/consul-template:0.32.0
 
 LABEL org.opencontainers.image.source=https://github.com/inovex/pgbouncer-vault-sidecar
 LABEL org.opencontainers.image.description="Credential management for your Postgres database connections! "
